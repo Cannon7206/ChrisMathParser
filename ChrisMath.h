@@ -27,12 +27,12 @@ struct token {
 
     token(const tokenType t, std::string  w) : type(t), word(std::move(w)) {}
 };
-class tokenizer {
+class Tokenizer {
 public:
     std::vector<token> tokenize(const std::string& input);
 };
 
-class parser {
+class Parser {
 public:
     std::vector<token> infixToPostfix(const std::vector<token>& tokens);
 private:
@@ -51,9 +51,9 @@ class ChrisMathParser {
 public:
     double evaluate(const std::string& input);
 private:
-    tokenizer tokenizer;
+    Tokenizer tokenizer;
     Evaluator evaluator;
-    parser parser;
+    Parser parser;
 };
 
 

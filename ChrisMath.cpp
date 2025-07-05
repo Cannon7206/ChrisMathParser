@@ -3,7 +3,7 @@
 #include <tuple>
 
 
-std::vector<token> tokenizer::tokenize(const std::string &input) {
+std::vector<token> Tokenizer::tokenize(const std::string &input) {
     std::vector<token> tokens;
     const size_t len = input.length();
     size_t i = 0;
@@ -55,7 +55,9 @@ std::vector<token> tokenizer::tokenize(const std::string &input) {
     }
     return tokens;
 }
+std::vector<token> Parser::infixToPostfix(const std::vector<token>& tokens){
 
+}
 
 double ChrisMathParser::evaluate(const std::string& input) {
     auto tokens = tokenizer.tokenize(input);
