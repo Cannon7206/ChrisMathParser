@@ -1,8 +1,5 @@
 #include "ChrisMath.h"
 
-#include <tuple>
-
-
 std::vector<token> Tokenizer::tokenize(const std::string &input) {
     std::vector<token> tokens;
     const size_t len = input.length();
@@ -47,23 +44,19 @@ std::vector<token> Tokenizer::tokenize(const std::string &input) {
             tokens.emplace_back(tokenType::PARENTHESIS, std::string(1, input[i]));
             i++;
             continue;
-        }
-        else {
+        } else {
             std::cout << "Unknown character" << c << std::endl;
             i++;
         }
     }
     return tokens;
 }
-std::vector<token> Parser::infixToPostfix(const std::vector<token>& tokens){
 
+std::vector<token> Parser::infixToPostfix(const std::vector<token> &tokens) {
 }
 
-double ChrisMathParser::evaluate(const std::string& input) {
+double ChrisMathParser::evaluate(const std::string &input) {
     auto tokens = tokenizer.tokenize(input);
     auto postfix = parser.infixToPostfix(tokens);
     return evaluator.evaluatePostfix(postfix);
 }
-
-
-
