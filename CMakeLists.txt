@@ -6,6 +6,4 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(MathParser STATIC ChrisMath.cpp
         funct.cpp
         funct.h
-        token.cpp
-        token.h
 )

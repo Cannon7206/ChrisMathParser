@@ -1,39 +1,67 @@
 #include "ChrisMath.h"
 
+#include <tuple>
 
 
-double ApplyOp(const double a, const double b, const char op) {
-    double result = 0;
-    switch (op) {
-        case '+':
-            return result = a + b;
+std::vector<token> tokenizer::tokenize(const std::string &input) {
+    std::vector<token> tokens;
+    const size_t len = input.length();
+    size_t i = 0;
 
-        case '-':
-            return result = a - b;
-
-        case '*':
-            return result = a * b;
-
-        case '/':
-            return result = a / b;
-
-        case '^':
-            return result = funct::power(a, b);
-
-        default:
-            break;
+    while (i < len) {
+        char c = input[i];
+        //skipping whitespace
+        if (isspace(c)) {
+            i++;
+            continue;
+        }
+        //number, digit or "."
+        else if (isdigit(c) || c == '.') {
+            const size_t start = i;
+            while (i < len && (isdigit(input[i]) || input[i] == '.')) {
+                i++;
+            }
+            std::string word = input.substr(start, i - start);
+            tokenType type = tokenType::NUMBER;
+            tokens.emplace_back(type, word);
+            continue;
+        }
+        //Functions
+        else if (isalpha(c)) {
+            size_t start = i;
+            while (i < len && (isalnum(input[i]))) {
+                i++;
+            }
+            std::string word = input.substr(start, i - start);
+            tokenType type = tokenType::FUNCTION;
+            tokens.emplace_back(type, word);
+        }
+        //Operator
+        else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+            tokens.emplace_back(tokenType::OPERATOR, std::string(1, input[i]));
+            i++;
+            continue;
+        }
+        //Parenthesis
+        else if (c == '(' || c == ')') {
+            tokens.emplace_back(tokenType::PARENTHESIS, std::string(1, input[i]));
+            i++;
+            continue;
+        }
+        else {
+            std::cout << "Unknown character" << c << std::endl;
+            i++;
+        }
     }
-    return result;
+    return tokens;
 }
-bool isFunction(const std::string& word) {
-    if (word=="sin"||word=="cos"||word=="tan"||word=="ln"||word=="e"||word=="sin^-1"||word=="cos^-1"||word=="tan^-1") {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
 
+
+double ChrisMathParser::evaluate(const std::string& input) {
+    auto tokens = tokenizer.tokenize(input);
+    auto postfix = parser.infixToPostfix(tokens);
+    return evaluator.evaluatePostfix(postfix);
+}
 
 
 

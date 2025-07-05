@@ -1,18 +1,60 @@
 #ifndef MATHPARSER_LIBRARY_H
 #define MATHPARSER_LIBRARY_H
-#include "funct.h"
-#include "token.h"
+#pragma once
 #include <algorithm>
+#include <utility>
 #include <vector>
-#include <memory>
-#include <sstream>
 #include <string>
 #include <iostream>
+#include "funct.h"
 
-double ApplyOp(double a, double b, char op);
+
+
 
 bool isFunction(const std::string& word);
+enum class tokenType {
+    NUMBER,
+    OPERATOR,
+    FUNCTION,
+    PARENTHESIS,
 
+};
+
+
+struct token {
+    tokenType type;
+    std::string word;
+
+    token(const tokenType t, std::string  w) : type(t), word(std::move(w)) {}
+};
+class tokenizer {
+public:
+    std::vector<token> tokenize(const std::string& input);
+};
+
+class parser {
+public:
+    std::vector<token> infixToPostfix(const std::vector<token>& tokens);
+private:
+    int getPrecedence(const std::string& op) const;
+    bool isLeftAssociative(const std::string& op) const;
+};
+class Evaluator {
+public:
+    double evaluatePostfix(const std::vector<token>& tokens);
+private:
+    double applyOperator(const std::string& op, double left, double right) const;
+    double applyFunction(const std::string& functName, double argument) const;
+};
+
+class ChrisMathParser {
+public:
+    double evaluate(const std::string& input);
+private:
+    tokenizer tokenizer;
+    Evaluator evaluator;
+    parser parser;
+};
 
 
 #endif //MATHPARSER_LIBRARY_H
