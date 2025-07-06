@@ -28,7 +28,7 @@ struct token {
 
 class Tokenizer {
 public:
-    std::vector<token> tokenize(const std::string &input);
+    static std::vector<token> tokenize(const std::string &input);
 };
 
 class Parser {
@@ -36,9 +36,9 @@ public:
     std::vector<token> infixToPostfix(const std::vector<token> &tokens);
 
 private:
-    int getPrecedence(const std::string &op) const;
+    static int getPrecedence(const std::string &op) ;
 
-    bool isLeftAssociative(const std::string &op) const;
+    static bool isLeftAssociative(const std::string &op) ;
 };
 
 class Evaluator {
@@ -54,6 +54,7 @@ private:
 class ChrisMathParser {
 public:
     double evaluate(const std::string &input);
+    std::vector<token> testfunction(const std::string &input);
 
 private:
     Tokenizer tokenizer;
