@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 
-#include "funct.h"
 
 bool isFunction(const std::string &word);
 
@@ -36,24 +35,25 @@ public:
     static std::vector<token> infixToPostfix(const std::vector<token> &tokens);
 
 private:
-    static int getPrecedence(const std::string &op) ;
+    static int getPrecedence(const std::string &op);
 
-    static bool isLeftAssociative(const std::string &op) ;
+    static bool isLeftAssociative(const std::string &op);
 };
 
 class Evaluator {
 public:
-    static double evaluatePostfix(const std::vector<token> &tokens) ;
+    static double evaluatePostfix(const std::vector<token> &tokens);
 
 private:
-    static double applyOperator(const std::string &op, double left, double right) ;
+    static double applyOperator(const std::string &op, double left, double right);
 
-    static double applyFunction(const std::string &functName, double argument) ;
+    static double applyFunction(const std::string &functName, double argument);
 };
 
 class ChrisMathParser {
 public:
     static double evaluate(const std::string &input);
+
     std::vector<token> testfunction(const std::string &input);
 
 private:

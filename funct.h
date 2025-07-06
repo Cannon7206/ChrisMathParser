@@ -55,6 +55,4 @@ public:
 };
 
 
-
-
 #endif //MATHFUNCTIONS_H

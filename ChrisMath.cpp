@@ -1,6 +1,7 @@
 #include "ChrisMath.h"
 #include <stack>
 #include <iostream>
+#include "funct.h"
 
 std::vector<token> Tokenizer::tokenize(const std::string &input) {
     std::vector<token> tokens;
@@ -53,34 +54,32 @@ std::vector<token> Tokenizer::tokenize(const std::string &input) {
     }
     return tokens;
 }
+
 int Parser::getPrecedence(const std::string &op) {
     if (op == "+" || op == "-") {
         return 1;
-    }
-    else if (op == "*" || op == "/") {
+    } else if (op == "*" || op == "/") {
         return 2;
-    }
-    else if (op == "^") {
+    } else if (op == "^") {
         return 3;
-    }
-    else {
+    } else {
         return 0;
     }
 }
+
 bool Parser::isLeftAssociative(const std::string &op) {
     if (op == "^") return false;
     else return true;
 }
 
 
-
 std::vector<token> Parser::infixToPostfix(const std::vector<token> &tokens) {
     std::vector<token> outputQueue;
     std::stack<token> operatorStack;
 
-    for (const auto &token : tokens) {
+    for (const auto &token: tokens) {
         switch (token.type) {
-            case tokenType::NUMBER:{
+            case tokenType::NUMBER: {
                 outputQueue.emplace_back(token);
                 break;
             }
@@ -90,7 +89,7 @@ std::vector<token> Parser::infixToPostfix(const std::vector<token> &tokens) {
             }
             case tokenType::OPERATOR: {
                 while (!operatorStack.empty()) {
-                    const struct token& top = operatorStack.top();
+                    const struct token &top = operatorStack.top();
                     if (top.type == tokenType::OPERATOR) {
                         int prec1 = getPrecedence(token.word);
                         int prec2 = getPrecedence(top.word);
@@ -109,8 +108,7 @@ std::vector<token> Parser::infixToPostfix(const std::vector<token> &tokens) {
             case tokenType::PARENTHESIS: {
                 if (token.word == "(") {
                     operatorStack.push(token);
-                }
-                else if (token.word == ")") {
+                } else if (token.word == ")") {
                     while (!operatorStack.empty() && operatorStack.top().word != "(") {
                         outputQueue.emplace_back(operatorStack.top());
                         operatorStack.pop();
@@ -125,8 +123,6 @@ std::vector<token> Parser::infixToPostfix(const std::vector<token> &tokens) {
                 }
                 break;
             }
-
-
         }
     }
     while (!operatorStack.empty()) {
@@ -138,7 +134,7 @@ std::vector<token> Parser::infixToPostfix(const std::vector<token> &tokens) {
 
 double Evaluator::evaluatePostfix(const std::vector<token> &postfix) {
     std::stack<double> Stack;
-    for (const auto &token : postfix) {
+    for (const auto &token: postfix) {
         switch (token.type) {
             case tokenType::NUMBER: {
                 double num = std::stod(token.word);
@@ -146,18 +142,21 @@ double Evaluator::evaluatePostfix(const std::vector<token> &postfix) {
                 break;
             }
             case tokenType::OPERATOR: {
-                if (Stack.size() <  2) {
+                if (Stack.size() < 2) {
                     throw std::runtime_error("Insufficient operands");
                 }
-                double right = Stack.top(); Stack.pop();
-                double left = Stack.top(); Stack.pop();
+                double right = Stack.top();
+                Stack.pop();
+                double left = Stack.top();
+                Stack.pop();
                 double result = applyOperator(token.word, left, right);
                 Stack.push(result);
                 break;
             }
             case tokenType::FUNCTION: {
                 if (Stack.empty()) throw std::runtime_error("No argument for function");
-                double arg = Stack.top(); Stack.pop();
+                double arg = Stack.top();
+                Stack.pop();
                 double result = applyFunction(token.word, arg);
                 Stack.push(result);
                 break;
@@ -165,7 +164,7 @@ double Evaluator::evaluatePostfix(const std::vector<token> &postfix) {
             default: throw std::runtime_error("Unknown token");
         }
     }
-    if (Stack.size()!= 1) throw std::runtime_error("Invalid postfix expression");
+    if (Stack.size() != 1) throw std::runtime_error("Invalid postfix expression");
     return Stack.top();
 }
 
@@ -188,13 +187,12 @@ double Evaluator::applyFunction(const std::string &functName, const double argum
 }
 
 double Evaluator::applyOperator(const std::string &op, const double left, const double right) {
-
-        if (op == "+") return left + right;
-        else if (op == "-")  return left - right;
-        else if (op == "*") return left * right;
-        else if (op == "/") return left / right;
-        else if (op == "^") return funct::power(left, right);
-        else throw std::runtime_error("Unknown operator");
+    if (op == "+") return left + right;
+    else if (op == "-") return left - right;
+    else if (op == "*") return left * right;
+    else if (op == "/") return left / right;
+    else if (op == "^") return funct::power(left, right);
+    else throw std::runtime_error("Unknown operator");
 }
 
 
