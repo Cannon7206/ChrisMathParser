@@ -3,6 +3,7 @@
 //
 
 #include "funct.h"
+#include <iostream>
 
 
 bool isEven(const int a) {
@@ -50,6 +51,18 @@ double funct::expon(const double a) {
         return result;
     }
 }
+double funct::pExpon(const double a) {
+    if (a == 0) {
+        return 1;
+    } else {
+        double result = 0;
+        for (int k = 0; k < 25; k++) {
+            const double term = power(a, k) / factorial(k);
+            result += term;
+        }
+        return result;
+    }
+}
 
 double funct::factorial(const double a) {
     if (funct::isInteger(a) == true) {
@@ -82,11 +95,16 @@ double funct::squareRoot(const double a, const double epsilon) {
     }
 }
 
-double funct::power(const double a, const int b) {
+double funct::power(const double a, const double b) {
     if (b == 0) return 1;
+    if (a == 0) return 0;
     double result = 1;
-    int exponent = abs(b);
-    for (int i = 0; i < exponent; ++i) {
+    const double exponent = dabs(b);
+    if (!isInteger(b)) {
+        if (b <= 0) throw std::domain_error("error, number is negative");
+        result = pExpon(b*pNatLog(a));
+    }
+    else for (int i = 0; i < exponent; ++i) {
         result *= a;
     }
     if (b < 0) return 1.0 / result;
@@ -152,19 +170,19 @@ double funct::arcSine(double a) {
         }
         return result;
     }
-    else std::cout << "error, number is out of bounds" << std::endl;
-    return 0;
+    else throw std::domain_error("error, number is out of bound");
+
 }
 
 double funct::arcCosine(double a) {
     if (a > -1 || a < 1) {
         return PI()/2 - arcSine(a);
     }
-    else std::cout << "error, number is out of bounds" << std::endl;
-    return 0;
+    else throw std::domain_error("error, number is out of bound");
+
 }
 
-double funct::arcTangent(double a) {
+double funct::arcTangent(const double a) {
     if (a > -1 || a < 1) {
         double result = 0;
         for (int i = 0; i < 10; ++i) {
@@ -173,14 +191,26 @@ double funct::arcTangent(double a) {
         }
         return result;
     }
-    else std::cout << "error, number is out of bounds" << std::endl;
-    return 0;
+    else throw std::domain_error("error, number is out of bound");
+
 }
 
 double funct::natLog(const double a) {
     if (a <= 0) {
-        std::cout << "domain error, input must be > 0" << std::endl;
-        return 0;
+        throw std::domain_error("error, number is out of bound");
+    }
+    double y = (a-1)/(a+1);
+    double result = 0;
+    for (int i = 0; i < 20; ++i) {
+        const double term = power(y,2*i+1)/(2*i+1);
+        result += term;
+    }
+    return 2*result;
+}
+
+double funct::pNatLog(const double a) {
+    if (a <= 0) {
+        throw std::domain_error("error, number is out of bound");
     }
     double y = (a-1)/(a+1);
     double result = 0;
