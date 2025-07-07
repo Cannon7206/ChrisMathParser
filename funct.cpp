@@ -46,25 +46,14 @@ double funct::expon(const double a) {
     } else {
         double result = 0;
         for (int k = 0; k < 25; k++) {
-            const double term = power(a, k) / factorial(k);
+            const double term = ePower(a, k) / factorial(k);
             result += term;
         }
         return result;
     }
 }
 
-double funct::pExpon(const double a) {
-    if (a == 0) {
-        return 1;
-    } else {
-        double result = 0;
-        for (int k = 0; k < 25; k++) {
-            const double term = power(a, k) / factorial(k);
-            result += term;
-        }
-        return result;
-    }
-}
+
 
 double funct::factorial(const double a) {
     if (funct::isInteger(a) == true) {
@@ -104,11 +93,23 @@ double funct::power(const double a, const double b) {
     const double exponent = dabs(b);
     if (!isInteger(b)) {
         if (b <= 0) throw std::domain_error("error, number is negative");
-        result = pExpon(b * pNatLog(a));
+        result = expon(b * natLog(a));
     } else
         for (int i = 0; i < exponent; ++i) {
             result *= a;
         }
+    if (b < 0) return 1.0 / result;
+    return result;
+}
+
+double funct::ePower(const double a, const double b) {
+    if (b == 0) return 1;
+    if (a == 0) return 0;
+    double result = 1;
+    const double exponent = dabs(b);
+    for (int i = 0; i < exponent; ++i) {
+        result *= a;
+    }
     if (b < 0) return 1.0 / result;
     return result;
 }
@@ -200,21 +201,10 @@ double funct::natLog(const double a) {
     double y = (a - 1) / (a + 1);
     double result = 0;
     for (int i = 0; i < 20; ++i) {
-        const double term = power(y, 2 * i + 1) / (2 * i + 1);
+        const double term = ePower(y, 2 * i + 1) / (2 * i + 1);
         result += term;
     }
     return 2 * result;
 }
 
-double funct::pNatLog(const double a) {
-    if (a <= 0) {
-        throw std::domain_error("error, number is out of bound");
-    }
-    double y = (a - 1) / (a + 1);
-    double result = 0;
-    for (int i = 0; i < 20; ++i) {
-        const double term = power(y, 2 * i + 1) / (2 * i + 1);
-        result += term;
-    }
-    return 2 * result;
-}
+

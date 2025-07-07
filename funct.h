@@ -23,13 +23,11 @@ public:
 
     static double natLog(double a);
 
-    static double pNatLog(double a);
-
     static double expon(double a);
 
-    static double pExpon(double a);
-
     static double power(double a, double b);
+
+    static double ePower(double a, double b);
 
     static double squareRoot(double a, double epsilon = 1e-5);
 
