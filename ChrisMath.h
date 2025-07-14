@@ -14,6 +14,7 @@ enum class tokenType {
     OPERATOR,
     FUNCTION,
     PARENTHESIS,
+    VARIABLE,
 };
 
 

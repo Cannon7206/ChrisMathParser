@@ -3,6 +3,21 @@
 #include <iostream>
 #include "funct.h"
 
+bool isFunction(const std::string &word) {
+    if (word == "sin") return true;
+    else if (word == "cos") return true;
+    else if (word == "tan") return true;
+    else if (word == "arcsin") return true;
+    else if (word == "arccos") return true;
+    else if (word == "arctan") return true;
+    else if (word == "exp") return true;
+    else if (word == "ln") return true;
+    else if (word == "sqrt") return true;
+    else if (word == "!") return true;
+    else if (word == "abs") return true;
+    else return false;
+}
+
 std::vector<token> Tokenizer::tokenize(const std::string &input) {
     std::vector<token> tokens;
     const size_t len = input.length();
@@ -26,14 +41,14 @@ std::vector<token> Tokenizer::tokenize(const std::string &input) {
             tokens.emplace_back(type, word);
             continue;
         }
-        //Functions
+        //Functions or Variables
         else if (isalpha(c)) {
             size_t start = i;
             while (i < len && (isalnum(input[i]))) {
                 i++;
             }
             std::string word = input.substr(start, i - start);
-            tokenType type = tokenType::FUNCTION;
+            tokenType type = (isFunction(word)) ? tokenType::FUNCTION : tokenType::VARIABLE;
             tokens.emplace_back(type, word);
         }
         //Operator
@@ -178,7 +193,6 @@ double Evaluator::applyFunction(const std::string &functName, const double argum
     else if (functName == "exp") return funct::expon(argument);
     else if (functName == "ln") return funct::natLog(argument);
     else if (functName == "sqrt") return funct::squareRoot(argument);
-    else if (functName == "PI") return funct::PI();
     else if (functName == "!") return funct::factorial(argument);
     else if (functName == "abs") return funct::dabs(argument);
     else {

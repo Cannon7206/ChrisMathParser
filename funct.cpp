@@ -206,5 +206,3 @@ double funct::natLog(const double a) {
     }
     return 2 * result;
 }
-
-
